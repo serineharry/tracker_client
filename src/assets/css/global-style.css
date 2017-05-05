@@ -1,0 +1,82 @@
+html {
+    overflow-y: scroll;
+}
+
+body {
+    background-color: #eee;
+}
+
+input[type="date"] {
+    /*max-width: 155px;*/
+    /*min-width: 155px;*/
+}
+
+.container {
+    background-color: #fff;
+}
+
+.global-glyph-btn:hover {
+    cursor: pointer;
+}
+
+.global-tag {
+    border-radius: 15px 25px;
+    margin: 1px;
+}
+
+.global-right-align {
+    float: right;
+}
+
+.ng-valid[required],
+.ng-valid.required {
+    border-left: 5px solid #43a948;
+}
+
+.ng-invalid:not(form):not(app-input):not(app-select):not(app-textarea) {
+    border-left: 5px solid #a94442;
+}
+
+
+/* start for button spin animation */
+
+.global-progress-spin>span {
+    visibility: hidden;
+    position: absolute;
+}
+
+.global-progress-spin:before {
+    position: relative;
+    top: 1px;
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    content: '\e031';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    animation: spin 2s infinite linear;
+    -webkit-animation: spin2 2s infinite linear;
+}
+
+@-webkit-keyframes spin2 {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: scal(1) rotate(0deg);
+    }
+    to {
+        transform: scal(1) rotate(360deg);
+    }
+}
+
+
+/* end for button spin animation */

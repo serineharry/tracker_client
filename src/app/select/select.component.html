@@ -1,0 +1,12 @@
+<div *ngIf="(selDisabled && selDisabled==true); else selectBlock">
+    <div [class]="selClass" disabled>
+        {{ selModel }}
+    </div>
+</div>
+<ng-template #selectBlock>
+    <!--control are not making ng-invalid on parent form so created directive to add dynamically with following attributes
+   #myInput="ngModel" [appRegisterForm]="form" [appRegisterModel]="myInput"-->
+    <select [name]="name" [class]="selClass" (change)="emitChange($event)" [(ngModel)]="selModel" [required]="selRequired" [attr.multiple]="selMultiple" [ngStyle]="selStyle" [attr.placeholder]="placeholder" #mySelect="ngModel" [appRegisterForm]="form" [appRegisterModel]="mySelect">
+        <ng-content></ng-content>
+    </select>
+</ng-template>

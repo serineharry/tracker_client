@@ -1,0 +1,60 @@
+<!--<div class="container">-->
+
+<br>
+<div class="row">
+    <div class="col-md-8 col-md-offset-2">
+        <app-tracker-alert alertClass="alert alert-danger" [(alertMessage)]="errorMessage"></app-tracker-alert>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <app-search searchFor="schedule" [inProgress]="searchInProgress" (search)=performSearch($event)></app-search>
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-md-12">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Schedules
+                <app-button *ngIf="companyAdmin" class="pull-right" btnClass="btn btn-default" btnFaIcon="fa-pencil" (btnClick)="createSchedule()"> Create </app-button>
+                <br>
+                <br>
+
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Project</th>
+                                <th>User Story</th>
+                                <th>User Story Desc</th>
+                                <th>Phase</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Phase</th>
+                                <th>days</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let schedule of schedules" (click)="emitSelect($event, schedule)">
+                                <td>{{ schedule.projectName }}</td>
+                                <td>{{ schedule.userStory }}</td>
+                                <td>{{ schedule.userStoryDesc }}</td>
+                                <td>{{ schedule.phase }}</td>
+                                <td>{{ schedule.startDate }}</td>
+                                <td>{{ schedule.endDate }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--</div>-->

@@ -1,0 +1,14 @@
+.my-application-list {
+    max-width: 380px;
+    padding: 15px 35px 45px;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+.my-list-pointer {
+    cursor: pointer;
+}
+
+.my-operation-align {
+    text-align: right;
+}

@@ -1,0 +1,130 @@
+<div class="container">
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <app-tracker-alert alertClass="alert-danger" [(alertMessage)]="errorMessage"></app-tracker-alert>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Project {{ project.projectUid }}
+                    <i class="fa fa-sticky-note-o global-right-align" aria-hidden="true"></i>
+                    <br>
+                    <br>
+
+                </div>
+                <div class="panel-body">
+
+                    <form #projectForm="ngForm" ngNativeValidate>
+                        <div class="row">
+                            <div class="col-md-8">
+                                <br>
+                                <br>
+                                <br>
+                                <div class="row">
+
+                                    <div class="form-group col-md-6">
+                                        <label for="projectUid"> Project Id </label>
+                                        <app-input [form]="projectForm" name="projectUid" type="text" iptClass="form-control" placeholder="Project Id" [(iptModel)]="project.projectUid" (focusout)="validateProject($event)" iptRequired [iptDisabled]="!companyAdmin"></app-input>
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label for="projectName"> Project Name</label>
+                                        <app-input [form]="projectForm" name="projectName" type="text" iptClass="form-control" placeholder="Project Name" [(iptModel)]="project.projectName" (focusout)="validateProject($event)" iptRequired [iptDisabled]="!companyAdmin"></app-input>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="projectType"> Project Type </label>
+                                        <app-select [form]="projectForm" name="projectType" selClass="form-control" placeholder="Project Type" [(selModel)]="project.projectType" [selDisabled]="!companyAdmin">
+                                            <option *ngFor="let projectType of projectTypeArr">{{ projectType }} </option>
+                                        </app-select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="startDate"> Start Date </label>
+                                        <app-input [form]="projectForm" name="startDate" type="date" iptClass="form-control" placeholder="Start date" [(iptModel)]="project.startDate" [iptDisabled]="!companyAdmin"></app-input>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="endDate"> End Date </label>
+                                        <app-input [form]="projectForm" name="endDate" type="date" iptClass="form-control" placeholder="end date" min="project.startDate" [(iptModel)]="project.endDate" [iptDisabled]="!companyAdmin"></app-input>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="releaseInfo"> Release </label>
+                                        <app-input [form]="projectForm" name="releaseInfo" type="number" iptClass="form-control" min="1701" max="2501" placeholder="Release" [(iptModel)]="project.releaseInfo" [iptDisabled]="!companyAdmin"></app-input>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="projectStatus"> Status </label>
+                                        <app-select [form]="projectForm" name="projectStatus" selClass="form-control {{project.projectStatus}}" [(selModel)]="project.projectStatus" [selDisabled]="!companyAdmin">
+                                            <option value="Green">Green</option>
+                                            <option value="Yellow">Yellow</option>
+                                            <option value="Red">Red</option>
+                                        </app-select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="effort"> Effort </label>
+                                        <app-input [form]="projectForm" name="effort" type="number" min="0.0" max="1000.00" iptClass="form-control" [(iptModel)]="project.effort" [iptDisabled]="!companyAdmin"></app-input>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">Primary Contacts</div>
+                                            <div class="panel-body">
+                                                <div class="row">
+                                                    <div class="form-group col-md-12">
+                                                        <label for="tier2"> Tier 2 </label>
+                                                        <app-input [form]="projectForm" name="tier2" iptClass="form-control" [(iptModel)]="project.tier2" [iptDisabled]="!companyAdmin"></app-input>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="primarySe"> SE </label>
+                                                        <app-input [form]="projectForm" name="primarySe" iptClass="form-control" [(iptModel)]="project.primarySe" [iptDisabled]="!companyAdmin"></app-input>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="primaryDeveloper"> Dev </label>
+                                                        <app-input [form]="projectForm" name="primaryDev" iptClass="form-control" [(iptModel)]="project.primaryDeveloper" [iptDisabled]="!companyAdmin"></app-input>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="manager"> Project Manager </label>
+                                                        <app-input [form]="projectForm" name="manager" iptClass="form-control" [(iptModel)]="project.manager" [iptDisabled]="!companyAdmin"></app-input>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="leadManager"> Lead Manager </label>
+                                                        <app-input [form]="projectForm" name="leadManager" iptClass="form-control" [(iptModel)]="project.leadManager" [iptDisabled]="!companyAdmin"></app-input>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <app-button btnType="submit" class="pull-right" [btnInProgress]="projectUpdateInProgress" (btnClick)="updateProject(projectForm.form.valid, projectForm.form.dirty)"> {{createOrUpdate}} </app-button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row" *ngIf="project.projectId > 0">
+        <div class="col-md-12">
+            <app-userstory-details [projectId]="project.projectId" invokingFrom="project">
+                <app-loading></app-loading>
+            </app-userstory-details>
+        </div>
+    </div>
+
+
+    <!--<app-messagebox [msgModel]="messageModel" (msgClick)="doMessageClick($event)"></app-messagebox>-->
+</div>

@@ -1,0 +1,14 @@
+<div class="my-login-wrapper">
+
+    <div class="row">
+        <div class="col-md-12">
+            <form class="my-form-signin" ngNativeValidate #loginForm="ngForm" autocomplete="off">
+                <h2>Login</h2>
+                <app-tracker-alert alertClass="alert-danger" [(alertMessage)]="errorMessage"></app-tracker-alert>
+                <app-input [form]="loginForm" name="username" type="text" iptClass="form-control my-form-text" [(iptModel)]="username" iptRequired="true"></app-input>
+                <app-input [form]="loginForm" name="password" type="password" iptClass="form-control my-form-text" placeholder="Password" [(iptModel)]="password" iptRequired="true"></app-input>
+                <app-button type="submit" btnClass="btn btn-lg btn-primary btn-block" [btnInProgress]="loginInProgress" (btnClick)="login(loginForm.form.valid)">Login</app-button>
+            </form>
+        </div>
+    </div>
+</div>

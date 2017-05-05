@@ -1,0 +1,69 @@
+<div class="container">
+
+    <br>
+
+    <div class="row">
+        <div class="col-md-12">
+            <app-search searchFor="project" [inProgress]="searchInProgress" (search)=performSearch($event)></app-search>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Projects
+                    <app-button *ngIf="companyAdmin" class="pull-right" btnClass="btn btn-default" btnFaIcon="fa fa-pencil" (btnClick)="createProject()"> Create </app-button>
+                    <br>
+                    <br>
+
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <!--<tr>
+                                    <td><input type="text" class="form-control" placeholder="project..." [(ngModel)]="searchProjectName"></td>
+                                    <td><input type="text" class="form-control" placeholder="project type..." [(ngModel)]="searchProjectTypeInfo"></td>
+                                    <td><input type="text" class="form-control" placeholder="release..." [(ngModel)]="searchRelease"></td>
+                                    <td><input type="date" class="form-control" placeholder="start date... " [(ngModel)]="searchStartDate"></td>
+                                    <td><input type="date" class="form-control" placeholder="end date..." [(ngModel)]="searchEndDate"></td>
+                                    <td>
+                                        <app-button btnClass="btn btn-default" btnFaIcon="fa-search" [btnInProgress]="searchInProgress" (btnClick)="performSearch()"> Search</app-button>
+                                    </td>
+
+                                </tr>-->
+                                <tr>
+                                    <th>Project</th>
+                                    <th>Project Type</th>
+                                    <th>Release </th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>
+
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let project of projects" (click)="openProject(project)">
+                                    <td>{{ project.projectName }}</td>
+                                    <td>{{ project.projectType }}</td>
+                                    <td>{{ project.releaseInfo }}</td>
+                                    <td>{{ project.startDate | date: userDateFormat }}</td>
+                                    <td>{{ project.endDate | date: userDateFormat }}</td>
+                                    <td></td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

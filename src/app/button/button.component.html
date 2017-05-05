@@ -1,0 +1,2 @@
+<button [name]="name" [type]="type" class="{{btnClass}} {{ ngClass }}" (click)="emitButtonClickEvent($event)" [disabled]="btnDisabled || btnInProgress"> 
+    <i [ngClass]="btnInProgress ? 'fa fa-spinner fa-pulse fa-fw': ['fa', btnFaIcon]" aria-hidden="true"></i> <ng-content></ng-content> </button>

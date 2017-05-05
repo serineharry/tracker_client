@@ -1,0 +1,189 @@
+<form #userstoryForm="ngForm">
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Schedule
+                    <i class="fa fa-check-square global-right-align" aria-hidden="true"></i>
+                    <br>
+                    <br>
+                </div>
+
+                <div class="panel-body">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-hover table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th>User Story</th>
+                                        <th>User Story Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let userstory of userstories" (click)="performSelectUserstory($event, userstory, userstoryForm.form.dirty)" [ngClass]="selectedUserstory.userstoryId==userstory.userstoryId?'bg-success':''">
+                                        <td>{{ userstory.userstory }}</td>
+                                        <td>{{ userstory.userstoryDesc }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table table-hover table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th>Phase</th>
+                                        <th>Days</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let schedule of selectedUserstory.schedules" (click)="performScheduleSelect(schedule)" [ngClass]="selectedSchedule==schedule?'bg-success':''">
+                                        <td>{{ schedule.phase }}</td>
+                                        <td>{{ schedule.days }}</td>
+                                        <td>{{ schedule.startDate | date: userDateFormat }}</td>
+                                        <td>{{ schedule.endDate | date: userDateFormat }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="3">
+                                        </td>
+                                        <td>
+                                            <app-button name="addPhase" btnClass="btn btn-xs form-control" (btnClick)="createSchedule()" *ngIf="selectedUserstory.schedules.length< validPhases.length">Add</app-button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="userStory"> User Story</label>
+                                        <app-input [form]="userstoryForm" type="text" name="userStory" iptClass="form-control" [(iptModel)]="selectedUserstory.userstory" [iptDisabled]="!companyAdmin" iptRequired></app-input>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>Phase</label>
+                                            <app-select [form]="userstoryForm" name="phase" selClass="form-control" [(selModel)]="selectedSchedule.phase" [selDisabled]="!companyAdmin">
+                                                <option *ngFor="let availphase of availPhases">{{ availphase }} </option>
+                                            </app-select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>Days</label>
+                                            <app-input [form]="userstoryForm" name="days" type="number" iptClass="form-control" [(iptModel)]="selectedSchedule.days" (change)="calculateDate('days')" min="0" max="600" [iptDisabled]="!companyAdmin"></app-input>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="userStoryDesc"> User Story Desc</label>
+                                        <app-input [form]="userstoryForm" type="text" name="userStoryDesc" iptClass="form-control" [(iptModel)]="selectedUserstory.userstoryDesc" [iptDisabled]="!companyAdmin"></app-input>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Start Date</label>
+                                        <app-input [form]="userstoryForm" name="startDate" type="date" iptClass="form-control" [(iptModel)]="selectedSchedule.startDate" (change)="calculateDate('startDate')" [iptDisabled]="!companyAdmin">
+                                        </app-input>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>End Date</label>
+                                        <app-input [form]="userstoryForm" name="endDate" type="date" iptClass="form-control" [(iptModel)]="selectedSchedule.endDate" [min]="selectedSchedule.startDate | date: 'yyyy-MM-dd'" [iptDisabled]="!companyAdmin"></app-input>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <table class="table table-condensed table-responsive">
+                                        <thead>
+                                            <tr>
+                                                <th>Owner</th>
+                                                <th>Hours</th>
+                                                <th>Status (%)</th>
+                                                <th>{{selectedSchedule.phase}} Review (%)</th>
+                                                <th>Testing (%) </th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let resource of selectedSchedule.resources; let rowNum=index">
+                                                <ng-template [ngIf]="resource.userId && resource.mode != 'DELETE'">
+                                                    <td> {{ resource.firstName}} </td>
+                                                    <td>
+                                                        <app-input [form]="userstoryForm" [name]="'ownerHrs'+rowNum" type="number" iptClass="my-resource-hr form-control" [(iptModel)]="resource.hoursAssigned" min="0" max="24" [iptDisabled]="!companyAdmin"></app-input>
+                                                    </td>
+                                                    <td>
+                                                        <app-input [form]="userstoryForm" [name]="'ownerHrs'+rowNum" iptClass="my-resource-hr form-control" [(iptModel)]="resource.hoursAssigned" [iptDisabled]="!companyAdmin"></app-input>
+                                                    </td>
+                                                    <td>
+                                                        <app-input [form]="userstoryForm" [name]="'ownerHrs'+rowNum" iptClass="my-resource-hr form-control" [(iptModel)]="resource.hoursAssigned" [iptDisabled]="!companyAdmin"></app-input>
+                                                    </td>
+                                                    <td>
+                                                        <app-input [form]="userstoryForm" [name]="'ownerHrs'+rowNum" iptClass="my-resource-hr form-control" [(iptModel)]="resource.hoursAssigned" [iptDisabled]="!companyAdmin"></app-input>
+                                                    </td>
+                                                    <td> <span name="delBtn" class="fa fa-times-circle global-glyph-btn" (click)='deleteOwner(resource, userstoryForm.form)' *ngIf="companyAdmin"></span> </td>
+                                                </ng-template>
+
+                                            </tr>
+                                            <tr>
+                                                <td colspan="6">
+                                                    <div class="text-center">
+                                                        <app-button name="resourceToggle" type="button" btnClass="btn btn-primary" (btnClick)="showResource=!showResource">Toggle Resource</app-button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="interfaces">Interfaces </label>
+                                        <app-input [form]="userstoryForm" name="interfaces" iptClass="form-control" [(iptModel)]="selectedSchedule.interfaces" [iptDisabled]="!companyAdmin"> </app-input>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="uatbstdate">UAT/BST Date </label>
+                                        <app-input [form]="userstoryForm" name="interfaces" type="date" iptClass="form-control" [(iptModel)]="selectedSchedule.userTestDate" [iptDisabled]="!companyAdmin"> </app-input>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Comments</label>
+                                        <app-textarea [form]="userstoryForm" name="comments" txtClass="form-control" [(txtModel)]="selectedSchedule.comments">
+                                        </app-textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" *ngIf="showResource">
+                            <app-resource [schedule]="selectedSchedule" (resourceSelect)="companyAdmin && assignOwnerOnResourceClick($event)"> Loading... </app-resource>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="pull-right">
+                                <app-button btnType="submit" btnClass="btn btn-primary" [btnInProgress]="userstoryUpdateInProgress" (btnClick)="createUpdateUserstory(userstoryForm.form.valid, userstoryForm.form.dirty)" [btnDisabled]="!companyAdmin && (selectedUserstory.userstoryId <= 0)">
+                                    {{ selectedUserstory.userstoryId > 0 ?'Update':'Create' }} </app-button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="reset" class="btn btn-primary" (click)="resetOwners()"> Reset </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!--<app-messagebox [msgModel]="messageModel" (msgClick)="doMessageClick($event)"></app-messagebox>-->
+            </div>
+        </div>
+    </div>
+</form>

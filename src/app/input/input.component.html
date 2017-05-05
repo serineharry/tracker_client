@@ -1,0 +1,26 @@
+<div *ngIf="(iptDisabled && iptDisabled==true); else inputBlock">
+    <div [class]="iptClass" disabled>
+        <div *ngIf="type=='date'; else nonDateBlock">
+            {{ iptModel | date: userDateFormat }}
+        </div>
+        <ng-template #nonDateBlock>
+            {{ iptModel }}
+        </ng-template>
+    </div>
+</div>
+<ng-template #inputBlock>
+
+    <div [ngSwitch]="type">
+        <div *ngSwitchCase="'checkbox' || 'radio'">
+            <input [name]="name" [type]="type" [class]="iptClass" [(ngModel)]="iptModel" [checked]="iptModel" (change)="parseForCheckbox($event,$event.target.checked)" #myInput="ngModel" [appRegisterForm]="form" [appRegisterModel]="myInput" />
+
+        </div>
+        <div *ngSwitchDefault>
+            <!--control are not making ng-invalid on parent form so created directive to add dynamically with following attributes
+   #myInput="ngModel" [appRegisterForm]="form" [appRegisterModel]="myInput"-->
+            <input [name]="name" [type]="type" [class]="iptClass" [(ngModel)]="iptModel" [value]="iptModel" [attr.min]="min" [attr.max]="max" [attr.placeholder]="placeholder" [required]="iptRequired" [attr.autofocus]="autofocus" [attr.autocomplete]="autocomplete"
+                #myInput="ngModel" [appRegisterForm]="form" [appRegisterModel]="myInput" (change)="emitChange($event)" />
+            <!--<div> {{ myInput.valid }} </div>-->
+        </div>
+    </div>
+</ng-template>

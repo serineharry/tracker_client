@@ -1,0 +1,126 @@
+<div class="container" *ngIf="apps.length > 0">
+    <br>
+    <br>
+    <div class="list-group my-application-list">
+        <a class="list-group-item" *ngFor="let app of apps" (click)="setAppAndRoute(app)"> {{ app.applicationAcronym }}</a>
+        <a class="list-group-item" *ngIf="globalAdmin==1" (click)="displayDetail=!displayDetail"> Create/update </a>
+    </div>
+
+    <br>
+
+    <div *ngIf="displayDetail" class="my-application-list">
+
+        <div *ngIf="companySubmissionErrorMessage" class="bg-danger">
+            <strong> {{ companySubmissionErrorMessage }} </strong>
+        </div>
+        <br>
+        <form #applicationForm="ngForm" ngNativeValidate>
+
+            <div class="form-group">
+                <label for="appAcronymn"> Application Acronym </label>
+                <app-input name="appAcronymn" type="text" iptClass="form-control" placeholder="Application Acronym" [(iptModel)]="app.applicationAcronym" (focusout)="validateAcronymn($event)" iptRequired></app-input>
+            </div>
+
+            <div class="form-group">
+                <label for="applicationName"> Application Name </label>
+                <app-input name="applicationName" type="text" iptClass="form-control" placeholder="Application Name" [(iptModel)]="app.applicationName" iptRequired></app-input>
+            </div>
+
+            <div class="form-group">
+                <label for="workingHrs"> Working Hours </label>
+                <app-input name="workingHrs" type="number" iptClass="form-control" max="24" min="0" accept="" placeholder="Working hours" [(iptModel)]="app.workingHours"></app-input>
+            </div>
+
+            <app-button btnType="submit" btnClass="btn btn-primary" [btnInProgress]="companyInProgress" (btnClick)="submitCustomerInfo($event, applicationForm.form.valid)"> {{ companyOperation }} </app-button>
+
+        </form>
+    </div>
+
+    <div *ngIf="companyOperation=='Update'">
+
+        <div class="row">
+            <div class="col-md-8 my-operation-align ">
+                Applicaiton User:
+                <div class="btn-group">
+                    <div class="btn-group" role="group ">
+                        <app-button btnClass="btn " [ngClass]="userOperation=='Assign' ? 'btn-primary': 'btn-default'" (btnClick)="displayAddOrUpdate('Assign')">Assign</app-button>
+                    </div>
+                    <div class="btn-group " role="group ">
+                        <app-button btnClass="btn " [ngClass]="userOperation=='Update' ? 'btn-primary': 'btn-default' " (btnClick)="displayAddOrUpdate('Update') ">Update</app-button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 ">
+
+            </div>
+        </div>
+        <br>
+        <div class="row " *ngIf="userOperation">
+
+            <div class="col-md-8 table-responsive">
+                <div class="input-group" *ngIf="userOperation=='Assign'">
+                    <app-input type=" text " iptClass="form-control " [(iptModel)]="userSearchText" placeholder="Enter comma separated users"></app-input>
+                    <span class="input-group-btn">
+					<app-button btnClass="btn btn-default" [btnInProgress]="searchInProgress" btnFaIcon="fa-search" (btnClick)="searchUser()">
+						Search
+                    </app-button>
+                    </span>
+                </div>
+
+                <table class="table table-hover ">
+                    <thead>
+                        <tr>
+                            <th>User Name</th>
+                            <th>Last Name</th>
+                            <th>First Name</th>
+                            <th>Roles</th>
+                            <th>
+                                <app-button *ngIf="userOperation=='Assign' " btnClass="btn btn-primary btn-xs " btnFaIcon="fa-floppy-o" [btnInProgress]="assignInProgress" (btnClick)='assignUser()'> Assign </app-button>
+                                <app-button *ngIf="userOperation=='Assign' " btnClass="btn btn-primary btn-xs " btnFaIcon="fa-refresh" (btnClick)='resetUserTable()'> Reset </app-button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr *ngFor="let user of users " (click)="selRow($event, user) " [ngClass]="user.selected? 'success': '' ">
+                            <td>{{user.username }}</td>
+                            <td>{{user.lastName }}</td>
+                            <td>{{user.firstName }}</td>
+                            <td>
+                                <button name="roleBtn" *ngFor="let userrole of user.roles " class="btn btn-danger btn-xs global-tag " (click)="unSetRole(user, userrole) ">
+								{{ userrole.role }} <span name="roleBtn" aria-hidden="true ">&times;</span>
+							</button>
+                            </td>
+                            <td><span name="delBtn" class="fa fa-times-circle global-glyph-btn" (click)='delRow(user)'></span></td>
+                            <td></td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+                <div *ngIf="userAssignMessage">
+                    {{ userAssignMessage }}
+                </div>
+            </div>
+            <div class="col-md-4 ">
+                <div class="panel panel-default " *ngIf="selectedUserCnt>0">
+                    <div class="panel-heading">Roles for selected users</div>
+                    <div class="panel-body">
+
+                        <div class="list-group">
+                            <a class="list-group-item my-list-pointer" *ngFor="let rolee of roles" (click)="selRole(rolee)"> {{ rolee.role }}</a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <br>
+
+    <app-messagebox [msgModel]="messageModel" (msgClick)="doMessageClick($event)"></app-messagebox>
+
+
+</div>

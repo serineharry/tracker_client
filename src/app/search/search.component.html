@@ -1,0 +1,59 @@
+<!--<div class="container">-->
+<form #searchForm="ngForm" class="form-inline" ngNativeValidate>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">Search
+            <div class="pull-right">
+                <div class="btn-toolbar" role="toolbar" aria-label="...">
+                    <app-button class="btn-group" btnType="submit" btnClass="btn btn-default" btnFaIcon="fa-search" [btnInProgress]="inProgress" (btnClick)="performSearch($event, searchCriteriaList, searchForm.form)"> Search</app-button>
+                    <div class="btn-group" role="group" aria-label="...">
+                        <button type="reset" class="btn btn-default" (click)=resetForm($event)>Reset</button>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <br>
+        </div>
+        <div class="panel-body">
+            <div class="row" *ngFor="let criteria of searchCriteriaList; let rowNum=index">
+                <div class="from-group col-md-10" *ngIf="!criteria.hidden">
+
+                    <select [name]="'searchField'+rowNum" class="form-control" [(ngModel)]="criteria.fieldName" (change)="changeFilterDynamically(criteria)" [required]="searchCriteriaList.length>1">
+                            <option></option>
+                            <option *ngFor="let config of searchConfigList"> {{ config.fieldName }} </option>
+                            </select>
+
+
+                    <select [name]="'searchType'+rowNum" class="form-control my-filter-style" [(ngModel)]="criteria.fieldFilter" [required]="searchCriteriaList.length>1">
+                            <option></option>
+                            <ng-template [ngIf]="criteria.fieldType=='string'">
+                              <option *ngFor="let filter of stringFilter"> {{ filter }} </option> 
+                            </ng-template>
+                            <ng-template [ngIf]="criteria.fieldType=='number'">
+                              <option *ngFor="let filter of numberFilter"> {{ filter }} </option> 
+                            </ng-template>
+                            <ng-template [ngIf]="criteria.fieldType=='date'">
+                              <option *ngFor="let filter of dateFilter"> {{ filter }} </option> 
+                            </ng-template>
+                          </select>
+
+                    <input *ngIf="criteria.fieldType=='string'" type="text" [name]="'searchValue'+rowNum" class="form-control" [(ngModel)]="criteria.fieldValue" (keyup)="performSearchOnEnter($event, searchCriteriaList, searchForm.form)" placeholder="Enter text to search"
+                    />
+                    <input *ngIf="criteria.fieldType=='number'" type="number" [name]="'searchValue'+rowNum" class="form-control" [(ngModel)]="criteria.fieldValue" (keyup)="performSearchOnEnter($event, searchCriteriaList, searchForm.form)" placeholder="Enter number to search"
+                    />
+                    <input *ngIf="criteria.fieldType=='date'" type="date" [name]="'searchValue'+rowNum" class="form-control" [(ngModel)]="criteria.fieldValue" (keyup)="performSearchOnEnter($event, searchCriteriaList, searchForm.form)" />
+                    <input *ngIf="!criteria.fieldType" type="text" [name]="'searchValue'+rowNum" class="form-control" [(ngModel)]="criteria.fieldValue" (keyup)="performSearchOnEnter($event, searchCriteriaList, searchForm.form)" placeholder="Enter text to search" />
+                    <select [name]="'searchCondition'+rowNum" [(ngModel)]="criteria.logicalCdn" class="form-control" (change)="addRowIfLast(rowNum, criteria.logicalCdn)">
+                              <!--<option></option> -->
+                              <option value="AND">AND</option>
+                              <option value="OR">OR</option>
+                            </select>
+                    <span name="delBtn" *ngIf="rowNum>0" class="fa fa-times-circle global-glyph-btn" (click)='deleteCriteria(rowNum)'></span>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+</form>
+<!--</div>-->

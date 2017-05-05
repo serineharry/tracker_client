@@ -1,0 +1,63 @@
+<div class="container">
+
+    <br>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <app-tracker-alert alertClass="alert alert-danger" [(alertMessage)]="errorMessage"></app-tracker-alert>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <app-search searchFor="reminder" [inProgress]="searchInProgress" (search)=performSearch($event)></app-search>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Task
+                    <app-button *ngIf="companyAdmin" class="pull-right" btnClass="btn btn-default" btnFaIcon="fa-pencil" (btnClick)="createReminder()"> Create </app-button>
+                    <br>
+                    <br>
+
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Task Id</th>
+                                    <th>Last Name</th>
+                                    <th>First Name</th>
+                                    <th>User Story</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Phase</th>
+                                    <th>Hours of Work</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let task of tasks" (click)="openTask(task)">
+                                    <td>{{ task.taskId }}</td>
+                                    <td>{{ task.lastName }}</td>
+                                    <td>{{ task.firstName }}</td>
+                                    <td>{{ task.userStory }}</td>
+                                    <td>{{ task.startDate | date: userDateFormat }}</td>
+                                    <td>{{ task.endDate | date: userDateFormat }}</td>
+                                    <td>{{ task.phase }}</td>
+                                    <td>{{ task.hoursOfWork }}</td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

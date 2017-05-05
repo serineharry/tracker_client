@@ -1,0 +1,11 @@
+<div *ngIf="(txtDisabled && txtDisabled==true); else textareaBlock">
+    <div [class]="txtClass" disabled>
+        {{ txtModel }}
+    </div>
+</div>
+<ng-template #textareaBlock>
+    <!--control are not making ng-invalid on parent form so created directive to add dynamically with following attributes
+   #myInput="ngModel" [appRegisterForm]="form" [appRegisterModel]="myInput"-->
+    <textarea [name]="name" [class]="txtClass" [(ngModel)]="txtModel" (change)="emitChanges($event)" [attr.placeholder]="placeholder" [required]="txtRequired" #myTextArea="ngModel" [appRegisterForm]="form" [appRegisterModel]="myTextArea"></textarea>
+
+</ng-template>

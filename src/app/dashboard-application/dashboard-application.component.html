@@ -1,0 +1,61 @@
+<div class="container">
+    <br>
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <app-tracker-alert alertClass="alert-danger" [(alertMessage)]="errorMessage"></app-tracker-alert>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-11">
+            <h3><span class="label label-danger"><i [ngClass]="missedTaskLoadInProgress ? 'fa fa-spinner fa-pulse fa-fw':''" aria-hidden="true"></i> Missed Schedule(s)</span></h3>
+        </div>
+
+    </div>
+    <div class="row">
+        <div *ngFor="let missedTask of missedTasks">
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><span class="fa fa-fire text-danger" aria-hidden="true"></span> <strong> <a [routerLink]="'/dashboard/task/'+missedTask.taskId">Task: {{ missedTask.taskName }} </a> </strong> <span class="pull-right"> <small>{{ missedTask.status }} </small></span></h3>
+                    </div>
+                    <div class="panel-body my-task">
+                        Description: {{ missedTask.taskDesk }}
+                        <br> Owner : {{missedTask.lastName}}, {{missedTask.firstName}}
+                        <br> StartDate: {{ missedTask.startDate | date: userDateFormat }} End Date: {{ missedTask.endDate | date:userDateFormat }}
+                        <br>
+                        <app-button *ngIf="missedTask.status != 'In progress'" btnClass="btn btn-default btn-xs" (btnClick)="markTaskStatus(missedTask, 'In progress','missedTask')">Mark In-progress</app-button>
+                        <app-button btnClass="btn btn-default btn-xs" (btnClick)="markTaskStatus(missedTask, 'Completed','missedTask')">Mark complete</app-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h3><span class="label label-info"><i [ngClass]="assignedTaskLoadInProgress ? 'fa fa-spinner fa-pulse fa-fw':''" aria-hidden="true"></i> Assignments</span></h3>
+        </div>
+    </div>
+    <div class="row">
+        <div *ngFor="let assignedTask of assignedTasks">
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title"><strong><a [routerLink]="'/dashboard/task/'+assignedTask.taskId"> Task: {{ assignedTask.taskName }} </a></strong> <span class="pull-right"> <small>{{ assignedTask.status }} </small></span></h3>
+
+                    </div>
+                    <div class="panel-body my-task">
+                        Description: {{ assignedTask.taskDesk }}
+                        <br> Owner : {{assignedTask.lastName}}, {{assignedTask.firstName}}
+                        <br> StartDate: {{ assignedTask.startDate | date: userDateFormat }} End Date: {{ assignedTask.endDate | date:userDateFormat }}
+                        <br>
+                        <app-button *ngIf="assignedTask.status != 'In progress'" btnClass="btn btn-default btn-xs" (btnClick)="markTaskStatus(assignedTask, 'In progress','assignedTask')">Mark In-progress</app-button>
+                        <app-button btnClass="btn btn-default btn-xs" (btnClick)="markTaskStatus(assignedTask, 'Completed','assignedTask')">Mark complete</app-button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,59 @@
+<div class="container">
+
+    <br>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <app-tracker-alert alertClass="alert alert-danger" [(alertMessage)]="errorMessage"></app-tracker-alert>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <app-search searchFor="reminder" [inProgress]="searchInProgress" (search)=performSearch($event)></app-search>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Reminders
+                    <app-button *ngIf="companyAdmin" class="pull-right" btnClass="btn btn-default" btnFaIcon="fa-pencil" (btnClick)="createReminder()"> Create </app-button>
+                    <br>
+                    <br>
+
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>username</th>
+                                    <th>Last Name</th>
+                                    <th>First Name</th>
+                                    <th>eMail</th>
+                                    <th>Enabled</th>
+                                    <th>Global Admin</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let user of users" (click)="openUser($event, user)">
+                                    <td>{{ user.username }}</td>
+                                    <td>{{ user.lastName }}</td>
+                                    <td>{{ user.firstName }}</td>
+                                    <td>{{ user.emailAddress }}</td>
+                                    <td>{{ user.enabled }}</td>
+                                    <td>{{ user.globalAdmin }}</td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

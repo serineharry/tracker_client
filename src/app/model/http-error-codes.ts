@@ -1,0 +1,20 @@
+export const http_error_codes = {
+    '0': 'Unable to reach server',
+    '400': 'Bad Request',
+    '401': 'Unauthorized',
+    '402': 'Payment Required',
+    '403': 'Forbidden Access Denied',
+    '404': 'Page Not Found',
+    '405': 'Method Not Allowed',
+    '406': 'Not Acceptable',
+    '407': 'Proxy Authentication Re',
+    '408': 'Request Timeout',
+    '409': 'Conflict',
+    '500': 'Internal Server Error',
+    '501': 'Not Implemented',
+    '502': 'Bad Gateway',
+    '503': 'Service Unavailable',
+    '504': 'Gateway Time-out',
+    '505': 'HTTP Version Not Suppor',
+    '506': 'Variant Also Negotiates'
+};

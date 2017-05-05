@@ -1,0 +1,93 @@
+<div class="container">
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <app-tracker-alert alertClass="alert-danger" [(alertMessage)]="errorMessage"></app-tracker-alert>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    User {{ user.username }}
+                    <i class="fa fa-user global-right-align" aria-hidden="true"></i>
+                    <br>
+                    <br>
+                </div>
+
+                <div class="panel-body">
+                    <form #userForm="ngForm" ngNativeValidate autocomplete="off">
+                        <div class="row">
+
+                            <div class="form-group col-md-6">
+                                <label for="username"> Username </label>
+                                <app-input [form]="userForm" name="username" type="text" iptClass="form-control" [(iptModel)]="user.username" iptRequired [iptDisabled]="user.userId>0" (focusout)="validateUser(unameCtrl.dirty)" #unameCtrl="iptModel"></app-input>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="email"> email address </label>
+                                <app-input [form]="userForm" name="email" type="email" iptClass="form-control" [(iptModel)]="user.emailAddress" iptRequired></app-input>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="lastName"> Last Name </label>
+                                <app-input [form]="userForm" name="lastName" type="text" iptClass="form-control" [(iptModel)]="user.lastName"></app-input>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="firstName"> First Name </label>
+                                <app-input [form]="userForm" name="firstName" type="text" iptClass="form-control" [(iptModel)]="user.firstName"></app-input>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="currentPassword"> Current Password </label>
+                                <app-input [form]="userForm" name="currentPassword" type="password" iptClass="form-control" [(iptModel)]="user.password" [iptDisabled]="user.userId==0"></app-input>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="newPassword"> New Password </label>
+                                <app-input [form]="userForm" name="newPassword" type="password" iptClass="form-control" [(iptModel)]="newpass" (keyup)="validatePasswordMatch()" [iptRequired]="user.userId==0"></app-input>
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <label for="confirmPassword"> Confirm Password </label>
+                                <div class="input-group">
+                                    <app-input [form]="userForm" name="confirmPassword" type="password" iptClass="form-control" aria-describedby="basic-addon11" [(iptModel)]="confirmpass" (keyup)="validatePasswordMatch()"></app-input>
+                                    <span class="input-group-addon" id="basid-addon11"><span class="glyphicon" 
+                                        [ngClass]="passwordMatches?'glyphicon-ok text-success':'glyphicon-remove text-danger'"></span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <div class="checkbox">
+                                    <label>
+                                  <app-input [form]="userForm" name="enabled" type="checkbox" [(iptModel)]="user.enabled" [iptDisabled]="!companyAdmin"></app-input> Enabled
+                                </label>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <div class="checkbox">
+                                    <label> <app-input [form]="userForm" name="globalAdmin" type="checkbox" [(iptModel)]="user.globalAdmin" [iptDisabled]="!companyAdmin"></app-input> Global Admin </label>
+                                    <small class="text-danger">High previlage one. Beware</small>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <app-button btnType="submit" class="pull-right" [btnInProgress]="userUpdateInProgress" (btnClick)="updateUser(userForm.form.valid, userForm.form.dirty)"> {{createOrUpdate}} </app-button>
+                            </div>
+                            <div class="col-md-6">
+                                <app-button btnType="submit" class="pull-left" (btnClick)="goBack()"> Back </app-button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

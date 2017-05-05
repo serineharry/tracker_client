@@ -1,0 +1,31 @@
+.my-login-wrapper {
+    margin-top: 80px;
+    margin-bottom: 80px;
+}
+
+.my-form-signin {
+    max-width: 380px;
+    padding: 15px 35px 45px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+:host>>>.my-form-text {
+    margin-bottom: 10px;
+    /*background-color: yellow;*/
+}
+
+.checkbox {
+    margin-bottom: 30px;
+    font-weight: normal;
+}
+
+.my-fadein {
+    opacity: 1 !important;
+}
+
+.my-fadeout {
+    opacity: 0;
+    transition: .5s ease-in-out all;
+}

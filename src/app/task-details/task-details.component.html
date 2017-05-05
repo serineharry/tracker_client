@@ -1,0 +1,112 @@
+<div class="container">
+    <br>
+    <br>
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <app-tracker-alert alertClass="alert alert-danger" [(alertMessage)]="errorMessage"></app-tracker-alert>
+        </div>
+    </div>
+    <div *ngIf="toggleSection=='task'">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        task {{ task.taskId }}
+                        <i class="fa fa-check-square global-right-align" aria-hidden="true"></i>
+                        <br>
+                        <br>
+                    </div>
+
+                    <div class="panel-body">
+
+                        <form #taskForm="ngForm" autocomplete="off">
+
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label for="taskName"> Task Name </label>
+                                    <app-input [form]="taskForm" name="taskName" iptClass="form-control" placeholder="Task" [(iptModel)]="task.taskName" [iptDisabled]="!companyAdmin" iptRequired></app-input>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="taskDesc"> Task Description </label>
+                                    <app-input [form]="taskForm" name="taskDesc" iptClass="form-control" placeholder="Task desc" [(iptModel)]="task.taskDesc" [iptDisabled]="!companyAdmin"></app-input>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="startDate"> Start Date </label>
+                                    <app-input [form]="taskForm" name="startDate" type="date" iptClass="form-control" [(iptModel)]="task.startDate" [iptDisabled]="!companyAdmin" iptRequired></app-input>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="endDate"> End Date </label>
+                                    <app-input [form]="taskForm" name="endDate" type="date" iptClass="form-control" [(iptModel)]="task.endDate" [min]="task.startDate| date: htmlDateFormat" [iptDisabled]="!companyAdmin" iptRequired></app-input>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label> User Story </label>
+                                    <div *ngIf="(task.scheduleId); else assignScheduleBlock">
+                                        {{task.userStory }}
+                                        <span name="clearSchedule" class="fa fa-times-circle global-glyph-btn" (click)='clearSchedule()' *ngIf="companyAdmin"></span>
+                                    </div>
+                                    <ng-template #assignScheduleBlock>
+                                        <div>
+                                            <app-button btnClass="btn btn-primary" (btnClick)="toggleSection='schedule'"> Assign Project/schedule </app-button>
+                                        </div>
+                                    </ng-template>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label> Owner </label>
+                                    <div *ngIf="(task.userId); else assignOwnerBlock">
+                                        {{task.lastName}}, {{task.firstName}}
+                                        <span name="clearResource" class="fa fa-times-circle global-glyph-btn" (click)='clearResource()' *ngIf="companyAdmin"></span>
+                                    </div>
+                                    <ng-template #assignOwnerBlock>
+                                        <div>
+                                            <app-button btnClass="btn btn-primary" (btnClick)="toggleSection='resource'"> Assign Owner </app-button>
+                                        </div>
+                                    </ng-template>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label for="hoursOfWork"> Hours of work/day </label>
+                                    <app-input [form]="taskForm" name="hoursOfWork" type="number" iptClass="form-control" min="0" max="24" placeholder="Hours of work/day" [(iptModel)]="task.hoursOfWork" [iptDisabled]="!companyAdmin"></app-input>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="status"> Status </label>
+                                    <!--<select class="form-group form-control" name="status" [(iptModel)]="task.status" required>
+                                    <option *ngFor="let status of statusArr"> {{status}} </option>
+                                </select>-->
+                                    <app-select [form]="taskForm" name="status" selClass="form-group form-control" [(selModel)]="task.status" selRequired>
+                                        <option></option>
+                                        <option *ngFor="let status of statusArr"> {{status}} </option>
+                                    </app-select>
+                                </div>
+                                <div class="form-group col-md-12">
+                                    <label for="comment"> Comment </label>
+                                    <app-textarea [form]="taskForm" name="comment" txtClass="form-control" [(txtModel)]="task.comment"></app-textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <app-button btnType="submit" class="pull-right" [btnInProgress]="taskUpdateInProgress" (btnClick)="updateTask(taskForm.form.valid, taskForm.form.dirty)"> {{createOrUpdate}} </app-button>
+                                </div>
+                                <div class="col-md-6">
+                                    <app-button btnType="submit" class="pull-left" (btnClick)="goBack()"> Back </app-button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="toggleSection=='schedule'">
+        <div class="col-md-12">
+            <app-schedule-search (scheduleSelect)="assignSchedule($event)"></app-schedule-search>
+        </div>
+    </div>
+    <div *ngIf="toggleSection=='resource'">
+        <div class="col-md-12">
+            <app-resource [schedule]="schedule" (resourceSelect)="assignResource($event)"> Loading... </app-resource>
+        </div>
+    </div>
+</div>

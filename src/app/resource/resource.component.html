@@ -1,0 +1,25 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        Resources
+        <i class="fa fa-id-badge global-right-align" aria-hidden="true"></i>
+    </div>
+    <div class="panel-body">
+        <table class="table table-hover table-responsive">
+            <thead>
+                <tr>
+                    <th>Resource</th>
+                    <th>Tot Open Hrs</th>
+                    <th>Open hrs/day</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let resource of resources" (click)="resourceSelected(resource)">
+                    <td> {{resource.firstName}} </td>
+                    <td> {{resource.totalAvailableHrs}} </td>
+                    <td> {{resource.perDayAvailableHrs | number: '.1-1'}} </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

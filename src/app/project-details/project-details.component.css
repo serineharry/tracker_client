@@ -1,0 +1,18 @@
+.table-condensed {
+    font-size: 10px;
+}
+
+
+/*project statuscombo BgColor*/
+
+:host>>>.Red {
+    background: #ea9191;
+}
+
+:host>>>.Green {
+    background: #aae0aa;
+}
+
+:host>>>.Yellow {
+    background: #ffff88;
+}

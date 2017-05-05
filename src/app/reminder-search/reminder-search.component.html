@@ -1,0 +1,63 @@
+<div class="container">
+
+    <br>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <app-tracker-alert alertClass="alert alert-danger" [(alertMessage)]="errorMessage"></app-tracker-alert>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <app-search searchFor="reminder" [inProgress]="searchInProgress" (search)=performSearch($event)></app-search>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    Reminders
+                    <app-button *ngIf="companyAdmin" class="pull-right" btnClass="btn btn-default" btnFaIcon="fa-pencil" (btnClick)="createReminder()"> Create </app-button>
+                    <br>
+                    <br>
+
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Before?</th>
+                                    <th>After?</th>
+                                    <th>Major Release?</th>
+                                    <th>Minor Release?</th>
+                                    <th>Days</th>
+                                    <th>Phase</th>
+                                    <th>Monthdays</th>
+                                    <th>Weekdays</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let reminder of reminders" (click)="openReminder(reminder)">
+                                    <td>{{ reminder.reminderType }}</td>
+                                    <td>{{ reminder.isBefore }}</td>
+                                    <td>{{ reminder.isAfter }}</td>
+                                    <td>{{ reminder.majorRelease }}</td>
+                                    <td>{{ reminder.minorRelease }}</td>
+                                    <td>{{ reminder.days }}</td>
+                                    <td>{{ reminder.phase }}</td>
+                                    <td>{{ reminder.monthdays }}</td>
+                                    <td>{{ reminder.weekdays }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

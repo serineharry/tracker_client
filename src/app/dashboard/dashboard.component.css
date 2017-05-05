@@ -1,0 +1,10 @@
+.my-brand {
+    border: 0;
+    background: none;
+    box-shadow: none;
+    border-radius: 0px;
+}
+
+.my-brand:focus {
+    outline: 0 !important;
+}

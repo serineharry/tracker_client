@@ -1,0 +1,159 @@
+<div class="container">
+    <br>
+    <br>
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <app-tracker-alert alertClass="alert alert-danger" [(alertMessage)]="errorMessage"></app-tracker-alert>
+        </div>
+    </div>
+    <form #reminderForm="ngForm" autocomplete="off">
+
+        <div class="row" *ngIf="toggleSection=='reminder'">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Reminder {{ reminder.reminderId }}
+                        <i class="fa fa-bell global-right-align" aria-hidden="true"></i>
+                        <br>
+                        <br>
+                    </div>
+
+                    <div class="panel-body">
+                        <div class="row">
+
+                            <div class="form-group col-md-6">
+                                <label for="remType"> Type </label>
+                                <app-select [form]="reminderForm" name="remType" [(selModel)]="reminder.reminderType" selClass="form-control" selRequired [selDisabled]="!companyAdmin">
+                                    <option>Release</option>
+                                    <option>Schedule</option>
+                                    <option>Month</option>
+                                    <option>Week</option>
+                                </app-select>
+                            </div>
+                            <div class="form-group col-md-6">
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="form-group col-md-6" *ngIf="!(reminder.reminderType=='Week' || reminder.reminderType=='Month')">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="before" class="control-label"> Before? </label>
+                                        <app-input [form]="reminderForm" name="before" type="checkbox" iptClass="checkbox" [(iptModel)]="reminder.isBefore" [iptDisabled]="!companyAdmin"> </app-input>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="after" class="control-label"> After?</label>
+                                        <app-input [form]="reminderForm" name="after" type="checkbox" iptClass="checkbox" [(iptModel)]="reminder.isAfter" [iptDisabled]="!companyAdmin"> </app-input>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="form-group col-md-6" *ngIf="reminder.reminderType=='Release'">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="startDate" class="control-label"> Major Release? </label>
+                                        <app-input [form]="reminderForm" name="startDate" type="checkbox" iptClass="checkbox" [(iptModel)]="reminder.majorRelease" [iptDisabled]="!companyAdmin"> </app-input>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="endDate" class="control-label"> Minor Release? </label>
+                                        <app-input [form]="reminderForm" name="endDate" type="checkbox" iptClass="checkbox" [(iptModel)]="reminder.minorRelease" [iptDisabled]="!companyAdmin"> </app-input>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+
+                            <div *ngIf="reminder.reminderType=='Schedule'">
+                                <div class="form-group col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="startDate" class="control-label"> Start Date? </label>
+                                            <app-input [form]="reminderForm" name="startDate" type="checkbox" iptClass="checkbox" [(iptModel)]="reminder.startDate" [iptDisabled]="!companyAdmin"> </app-input>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="endDate" class="control-label"> End Date? </label>
+                                            <app-input [form]="reminderForm" name="endDate" type="checkbox" iptClass="checkbox" [(iptModel)]="reminder.endDate" [iptDisabled]="!companyAdmin"> </app-input>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label>Phase</label>
+                                    <app-select [form]="reminderForm" name="phase" selClass="form-control" [(selModel)]="reminder.phase" [selDisabled]="!companyAdmin">
+                                        <option>HLD</option>
+                                        <option>AD</option>
+                                        <option>Dev</option>
+                                        <option>Test</option>
+                                    </app-select>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-6" *ngIf="reminder.reminderType=='Week'">
+                                <label>Date</label>
+                                <select name="weekdays" class="form-control" [(ngModel)]="reminder.weekdays" [disabled]="!companyAdmin" multiple>
+                                    <option value="Sunday">Sunday</option>
+                                    <option value="Monday">Monday</option>
+                                    <option value="Tuesday">Tuesday</option>
+                                    <option value="Wednesday">Wednesday</option>
+                                    <option value="Thursday">Thursday</option>
+                                    <option value="Friday">Friday</option>
+                                    <option value="Saturday">Saturday</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6" *ngIf="reminder.reminderType=='Month'">
+                                <label>Days (selected:- {{reminder.monthdays}} )</label>
+                                <select name="monthdays" class="form-control" [(ngModel)]="reminder.monthdays" [disabled]="!companyAdmin" multiple>
+                                    <option *ngFor="let day of month_days" [value]="day">{{day}}</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-6" *ngIf="!(reminder.reminderType=='Week' || reminder.reminderType=='Month')">
+                                <label for="days"> days </label>
+                                <app-input [form]="reminderForm" name="days" type="number" [(iptModel)]="reminder.days" iptClass="form-control" min="0" max="100" [iptDisabled]="!companyAdmin">
+                                </app-input>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <label for="notifyTo"> Notify </label>
+                                <span *ngFor="let user of reminder.users">
+                                    {{user.lastName}}, {{user.firstName}} &nbsp; <span name="removeUser" class="fa fa-times-circle global-glyph-btn" (click)='removeUser(user)' *ngIf="companyAdmin"></span>
+                                </span>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <app-button btnClass="btn btn-xs btn-primary" btnFaIcon="fa-user-circle" (btnClick)="toggleSection='user-search'" [btnDisabled]="!companyAdmin"> Assign </app-button>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="reminder.reminderType=='Schedule'">
+                            <div class="col-md-12">
+                                <label for="notifyOwner" class="control-label"> Notify Owner? </label>
+                                <app-input [form]="reminderForm" name="notifyOwner" type="checkbox" iptClass="checkbox" [(iptModel)]="reminder.notifyOwner" [iptDisabled]="!companyAdmin"> </app-input>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-12">
+                                <label for="content"> Notification content </label>
+                                <app-textarea [form]="reminderForm" name="content" [(txtModel)]="reminder.content" txtClass="form-control" txtRequired [txtDisabled]="!companyAdmin">
+                                </app-textarea>
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="text-center">
+                                <app-button btnType="submit" [btnInProgress]="reminderUpdateInProgress " (btnClick)="updateReminder(reminderForm.form.valid, reminderForm.form.dirty)" [btnDisabled]="!companyAdmin"> {{createOrUpdate}} </app-button>
+                                <app-button btnType="button" (btnClick)="deleteReminder()" [btnDisabled]="!companyAdmin"> Delete </app-button>
+                                <app-button btnType="button" (btnClick)="goBack() "> Back </app-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="toggleSection=='user-search'">
+            <div class="col-md-12">
+                <app-user-search (searchSelect)="assignUser($event, reminderForm.form)" useAs="drilldown">
+                    <app-loading></app-loading>
+                </app-user-search>
+            </div>
+        </div>
+    </form>
+
+</div>
