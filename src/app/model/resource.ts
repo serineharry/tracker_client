@@ -10,5 +10,10 @@ export class Resource {
     mode = 'DELETE';
     taskId: number;
 
+    // used on userstory
+    progress: number;
+    reviewProgress: number;
+    otherProgress: number;
+
 
 }

@@ -74,14 +74,15 @@ export class TaskDetailsComponent implements OnInit {
   assignSchedule(schedule: Schedule) {
     this.toggleSection = 'task';
     this.task.scheduleId = schedule.scheduleId;
-    // sree this.task.userStory = schedule.userStory;
-    this.task.projectName = schedule.projectName;
+    this.task.userstory = schedule.userstory;
+    this.task.projectUid = schedule.projectUid;
 
   }
   clearSchedule() {
     this.task.scheduleId = null;
-    this.task.userStory = '';
-    this.task.projectName = '';
+    this.task.userstory = '';
+    this.task.projectUid = '';
+
   }
 
   assignResource(resource: Resource) {

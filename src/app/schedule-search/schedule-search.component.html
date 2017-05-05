@@ -34,16 +34,13 @@
                                 <th>Phase</th>
                                 <th>Start Date</th>
                                 <th>End Date</th>
-                                <th>Phase</th>
-                                <th>days</th>
-
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let schedule of schedules" (click)="emitSelect($event, schedule)">
-                                <td>{{ schedule.projectName }}</td>
-                                <td>{{ schedule.userStory }}</td>
-                                <td>{{ schedule.userStoryDesc }}</td>
+                                <td>{{ schedule.projectUid }}</td>
+                                <td>{{ schedule.userstory }}</td>
+                                <td>{{ schedule.userstoryDesc }}</td>
                                 <td>{{ schedule.phase }}</td>
                                 <td>{{ schedule.startDate }}</td>
                                 <td>{{ schedule.endDate }}</td>

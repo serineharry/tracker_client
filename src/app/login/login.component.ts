@@ -4,6 +4,7 @@ import { TokenState } from '../model/token-state';
 import { AuthenticationService } from '../common_services/authentication.service';
 import { GlobalService } from '../global.service';
 import { GlobalConfig } from '../global-config';
+import { MessageboxService } from '../messagebox/messagebox.service';
 
 @Component({
   selector: 'app-login',
@@ -24,13 +25,15 @@ export class LoginComponent implements OnInit {
 
 
   constructor(private authService: AuthenticationService, private router: Router,
-    private actRoute: ActivatedRoute, private globalSvc: GlobalService, private ref: ChangeDetectorRef) {
+    private actRoute: ActivatedRoute, private globalSvc: GlobalService, private ref: ChangeDetectorRef,
+    private messageService: MessageboxService) {
     this.calledFrom = this.actRoute.snapshot.queryParams['returnURL'];
   }
 
   ngOnInit() {
     this.username = 'sm326m';
     this.password = 'sree123';
+
   }
 
 
@@ -87,6 +90,5 @@ export class LoginComponent implements OnInit {
       this.errorMessage = null;
     }.bind(this), 3000);
   }
-
 
 }

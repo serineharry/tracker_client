@@ -61,8 +61,6 @@ export class InputComponent {
 
   private dirty = false;
 
-
-
   constructor(private globalSvc: GlobalService) { }
 
   parseForCheckbox(event: Event, v: any) {

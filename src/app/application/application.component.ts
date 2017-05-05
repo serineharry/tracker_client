@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../model/user';
 import { Role } from '../model/role';
-import { MessageModel } from '../messagebox/message-model';
 import { ApplicationService } from './application.service';
 import { Application } from '../model/application';
 import { GlobalConfig } from '../global-config';
@@ -9,6 +8,7 @@ import { GlobalService } from '../global.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RequestPk } from '../model/request-pk';
 import { Location } from '@angular/common';
+import { MessageboxService } from '../messagebox/messagebox.service';
 
 @Component({
     selector: 'app-application',
@@ -36,14 +36,12 @@ export class ApplicationComponent implements OnInit {
 
     selectedUserCnt = 0;
 
-    messageModel: MessageModel = new MessageModel();
-
     globalAdmin = this.globalService.getUser().globalAdmin;
     // inc = 0;
 
 
     constructor(private globalService: GlobalService, private appService: ApplicationService,
-        private actRoute: ActivatedRoute, private router: Router, private location: Location) {
+        private actRoute: ActivatedRoute, private router: Router, private location: Location, private messageService: MessageboxService) {
 
         let retUrl: string = this.actRoute.snapshot.queryParams['returnURL'];
 
@@ -220,9 +218,10 @@ export class ApplicationComponent implements OnInit {
         }
 
         if (this.app.users.length === 0) {
-            this.messageModel = new MessageModel();
-            this.messageModel.message = 'Please use search criteria and select user';
-            this.messageModel.operation = 'userassign';
+            this.messageService.activate('Please use search criteria and select user')
+                .then(res => {
+                    console.log(`Confirmed: ${res}`);
+                });
         } else {
 
             this.assignInProgress = true;
@@ -251,13 +250,39 @@ export class ApplicationComponent implements OnInit {
     }
 
     delRow(selectedUser: User) {
+        console.log('delete user');
 
-        this.messageModel = new MessageModel();
-        this.messageModel.message = 'are you sure you want to remove it ?';
-        this.messageModel.operation = 'remove';
-        this.messageModel.carryOver = selectedUser;
+        this.messageService.activate('Please use search criteria and select user')
+            .then(res => {
+                console.log(`Confirmed: ${res}`);
+
+                if (res) {
+                    if (this.userOperation === 'Update') {
+
+                        let _appRequest = new Application();
+                        _appRequest.applicationId = this.app.applicationId;
+                        _appRequest.users = [];
+                        _appRequest.users.push(selectedUser);
+
+                        this.appService.unAssignApplicationUsers(_appRequest)
+                            .subscribe(
+                            status => {
+                                // console.log(users);
+                                this.users = this.users.filter(user => user.userId !== selectedUser.userId);
+
+                            },
+                            err => {
+                                console.log('User unassign Exception', err);
+                                this.assignInProgress = false;
+                            }
+                            );
+                    } else {
+                        this.users = this.users.filter(user => user.userId !== selectedUser.userId);
+                    }
+                }
 
 
+            });
     }
 
     selRow(event: MouseEvent, user: User) {
@@ -382,43 +407,6 @@ export class ApplicationComponent implements OnInit {
     resetUserTable() {
         this.users = [];
     }
-
-    doMessageClick(event: any) {
-
-        let whichButton = event.buttonClicked;
-        let messageModel: MessageModel = event.messageModel;
-
-        let selectedUser = messageModel.carryOver;
-
-        if (messageModel.operation === 'remove') {
-            if (whichButton === 'Ok') {
-
-                if (this.userOperation === 'Update') {
-
-                    let _appRequest = new Application();
-                    _appRequest.applicationId = this.app.applicationId;
-                    _appRequest.users = [];
-                    _appRequest.users.push(selectedUser);
-
-                    this.appService.unAssignApplicationUsers(_appRequest)
-                        .subscribe(
-                        status => {
-                            // console.log(users);
-                            this.users = this.users.filter(user => user.userId !== selectedUser.userId);
-
-                        },
-                        err => {
-                            console.log('User unassign Exception', err);
-                            this.assignInProgress = false;
-                        }
-                        );
-                } else {
-                    this.users = this.users.filter(user => user.userId !== selectedUser.userId);
-                }
-            }
-        }
-    }
-
 
     setAppAndRoute(app: Application) {
         console.log('application', app);

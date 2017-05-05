@@ -18,7 +18,7 @@ export class RegisterFormModelDirective implements OnInit {
 
   ngOnInit() {
     if (this.appRegisterForm && this.appRegisterModel) {
-      console.log('inside directive if condition');
+      // console.log('inside directive if condition');
       this.appRegisterForm.form.removeControl(this.appRegisterModel.name);
       // this.appRegisterForm.form.registerControl(this.appRegisterModel.name, this.appRegisterModel.control);
       this.appRegisterForm.addControl(this.appRegisterModel);

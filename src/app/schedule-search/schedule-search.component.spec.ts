@@ -8,9 +8,9 @@ describe('ScheduleSearchComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ScheduleSearchComponent ]
+      declarations: [ScheduleSearchComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

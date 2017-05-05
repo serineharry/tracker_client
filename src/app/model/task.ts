@@ -10,13 +10,16 @@ export class Task {
     endDate: Date;
     hoursOfWork: number;
     status: string;
+    progress: number;
+    reviewProgress: number;
+    otherProgress: number;
     comment: string;
 
     userName: string;
     lastName: string;
     firstName: string;
-    userStory: string;
-    projectName: string;
+    userstory: string;
+    projectUid: string;
     release: string;
 
 }

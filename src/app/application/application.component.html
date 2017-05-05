@@ -1,6 +1,7 @@
 <div class="container" *ngIf="apps.length > 0">
     <br>
     <br>
+    <app-messagebox></app-messagebox>
     <div class="list-group my-application-list">
         <a class="list-group-item" *ngFor="let app of apps" (click)="setAppAndRoute(app)"> {{ app.applicationAcronym }}</a>
         <a class="list-group-item" *ngIf="globalAdmin==1" (click)="displayDetail=!displayDetail"> Create/update </a>
@@ -120,7 +121,7 @@
     </div>
     <br>
 
-    <app-messagebox [msgModel]="messageModel" (msgClick)="doMessageClick($event)"></app-messagebox>
+    <!--<app-messagebox [msgModel]="messageModel" (msgClick)="doMessageClick($event)"></app-messagebox>-->
 
 
 </div>

@@ -13,14 +13,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" (click)="emitCloseEvent($event, 'Cancel')" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="messageBoxModalLabel">{{ messageModel.title }}</h4>
+                <h4 class="modal-title" id="messageBoxModalLabel">{{ title }}</h4>
             </div>
             <div class="modal-body">
-                {{ messageModel.message }}
+                {{ message }}
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" (click)="emitCloseEvent($event, 'Ok')">Ok</button>
-                <button type="button" class="btn btn-primary" (click)="emitCloseEvent($event, 'Cancel')">Cancel</button>
+                <button type="button" class="btn btn-default" (click)="emitOk($event)">Ok</button>
+                <button type="button" class="btn btn-primary" (click)="emitCancel($event)">Cancel</button>
             </div>
         </div>
     </div>

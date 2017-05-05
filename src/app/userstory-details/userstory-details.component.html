@@ -1,7 +1,14 @@
 <form #userstoryForm="ngForm">
 
+    <app-messagebox></app-messagebox>
+
     <div class="row">
         <div class="col-md-12">
+            <div class="row" style="display: inline-block; position: fixed;">
+                <div class="col-md-8 col-md-offset-2">
+                    <app-tracker-alert alertClass="alert-danger" [(alertMessage)]="errorMessage"></app-tracker-alert>
+                </div>
+            </div>
 
             <div class="panel panel-primary">
                 <div class="panel-heading">
@@ -23,7 +30,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let userstory of userstories" (click)="performSelectUserstory($event, userstory, userstoryForm.form.dirty)" [ngClass]="selectedUserstory.userstoryId==userstory.userstoryId?'bg-success':''">
+                                    <tr *ngFor="let userstory of userstories" (click)="performSelectUserstory($event, userstory, userstoryForm.form)" [ngClass]="selectedUserstory.userstoryId==userstory.userstoryId?'bg-success':''">
                                         <td>{{ userstory.userstory }}</td>
                                         <td>{{ userstory.userstoryDesc }}</td>
                                     </tr>
@@ -121,13 +128,13 @@
                                                         <app-input [form]="userstoryForm" [name]="'ownerHrs'+rowNum" type="number" iptClass="my-resource-hr form-control" [(iptModel)]="resource.hoursAssigned" min="0" max="24" [iptDisabled]="!companyAdmin"></app-input>
                                                     </td>
                                                     <td>
-                                                        <app-input [form]="userstoryForm" [name]="'ownerHrs'+rowNum" iptClass="my-resource-hr form-control" [(iptModel)]="resource.hoursAssigned" [iptDisabled]="!companyAdmin"></app-input>
+                                                        <app-input [form]="userstoryForm" [name]="'progress'+rowNum" iptClass="my-resource-hr form-control" [(iptModel)]="resource.progress" [iptDisabled]="!companyAdmin"></app-input>
                                                     </td>
                                                     <td>
-                                                        <app-input [form]="userstoryForm" [name]="'ownerHrs'+rowNum" iptClass="my-resource-hr form-control" [(iptModel)]="resource.hoursAssigned" [iptDisabled]="!companyAdmin"></app-input>
+                                                        <app-input [form]="userstoryForm" [name]="'reviewProgress'+rowNum" iptClass="my-resource-hr form-control" [(iptModel)]="resource.reviewProgress" [iptDisabled]="!companyAdmin"></app-input>
                                                     </td>
                                                     <td>
-                                                        <app-input [form]="userstoryForm" [name]="'ownerHrs'+rowNum" iptClass="my-resource-hr form-control" [(iptModel)]="resource.hoursAssigned" [iptDisabled]="!companyAdmin"></app-input>
+                                                        <app-input [form]="userstoryForm" [name]="'otherProgress'+rowNum" iptClass="my-resource-hr form-control" [(iptModel)]="resource.otherProgress" [iptDisabled]="!companyAdmin"></app-input>
                                                     </td>
                                                     <td> <span name="delBtn" class="fa fa-times-circle global-glyph-btn" (click)='deleteOwner(resource, userstoryForm.form)' *ngIf="companyAdmin"></span> </td>
                                                 </ng-template>
@@ -172,7 +179,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="pull-right">
-                                <app-button btnType="submit" btnClass="btn btn-primary" [btnInProgress]="userstoryUpdateInProgress" (btnClick)="createUpdateUserstory(userstoryForm.form.valid, userstoryForm.form.dirty)" [btnDisabled]="!companyAdmin && (selectedUserstory.userstoryId <= 0)">
+                                <app-button btnType="submit" btnClass="btn btn-primary" [btnInProgress]="userstoryUpdateInProgress" (btnClick)="createUpdateUserstory(userstoryForm.form)" [btnDisabled]="!companyAdmin && (selectedUserstory.userstoryId <= 0)">
                                     {{ selectedUserstory.userstoryId > 0 ?'Update':'Create' }} </app-button>
                             </div>
                         </div>

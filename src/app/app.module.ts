@@ -18,12 +18,14 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProjectSearchComponent } from './project-search/project-search.component';
 import { ButtonComponent } from './button/button.component';
 import { ProjectDetailsComponent } from './project-details/project-details.component';
-import { UseDateFormatDirective } from './use-date-format.directive';
+
 import * as moment from 'moment/moment';
 import { SearchComponent } from './search/search.component';
 import { UserstorySearchComponent } from './userstory-search/userstory-search.component';
 import { UserstoryDetailsComponent } from './userstory-details/userstory-details.component';
-import { TitleCasePipe } from './title-case.pipe';
+import { UseDateFormatDirective } from './directives/use-date-format.directive';
+import { TitleCasePipe } from './directives/title-case.pipe';
+import { RegisterFormModelDirective } from './directives/register-form-model.directive';
 import { ResourceComponent } from './resource/resource.component';
 import { TaskSearchComponent } from './task-search/task-search.component';
 import { TaskDetailsComponent } from './task-details/task-details.component';
@@ -36,13 +38,13 @@ import { AuthenticationService } from './common_services/authentication.service'
 import { TrackerAlertComponent } from './tracker-alert/tracker-alert.component';
 import { UserDetailsComponent } from './user-details/user-details.component';
 import { InputComponent } from './input/input.component';
-import { RegisterFormModelDirective } from './framework-helper/register-form-model.directive';
 import { SelectComponent } from './select/select.component';
 import { TextareaComponent } from './textarea/textarea.component';
 import { UserSearchComponent } from './user-search/user-search.component';
 import { ReminderDetailsComponent } from './reminder-details/reminder-details.component';
 import { ReminderSearchComponent } from './reminder-search/reminder-search.component';
 import { LoadingComponent } from './loading/loading.component';
+import { MessageboxService } from './messagebox/messagebox.service';
 
 @NgModule({
   declarations: [
@@ -86,7 +88,7 @@ import { LoadingComponent } from './loading/loading.component';
     MaterialModule,
     AppRoutingModule
   ],
-  providers: [Title, GlobalService, AuthGuardService, AuthenticationService],
+  providers: [Title, GlobalService, AuthGuardService, AuthenticationService, MessageboxService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

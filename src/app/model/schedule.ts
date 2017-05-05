@@ -3,7 +3,6 @@ export class Schedule {
 
     scheduleId: number;
     userstoryId: number;
-    projectName: string;
     phase = '';
     days: number;
 
@@ -20,5 +19,11 @@ export class Schedule {
     // used on Resources component to fetch based on schedule
     applicationId: number;
     resources: Resource[];
+
+    // used on schedule search locator on task screen
+    projectUid: string;
+    userstory: string;
+    userstoryDesc: string;
+
 
 }

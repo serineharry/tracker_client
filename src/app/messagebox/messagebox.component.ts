@@ -1,66 +1,90 @@
-import { Component, OnInit, Input, Output, EventEmitter, HostListener } from '@angular/core';
-import { MessageModel } from './message-model';
+import { OnInit, Component } from '@angular/core';
+import { MessageboxService } from './messagebox.service';
+
+
+// const KEY_ESC = 27;
 
 @Component({
   selector: 'app-messagebox',
   templateUrl: './messagebox.component.html',
-  styleUrls: ['./messagebox.component.css'],
+  styleUrls: ['./messagebox.component.css']
 })
-export class MessageboxComponent implements OnInit {
 
-  showModal = false;
-  messageModel: MessageModel;
+// Sample usage for invoking messagebox
+// this.messageService.activate('Please use search criteria and select user')
+//       .then(res => {
+//         console.log(`Confirmed: ${res}`);
+//       });
 
-  @Input()
-  get msgModel() {
-    console.log('get');
-    return this.messageModel;
+export class MessageboxComponent {
 
-  }
-  set msgModel(val) {
-    console.log('sett');
+  showModal;
 
-    if (val !== this.messageModel) {
+  private _defaults = {
+    title: 'Confirmation',
+    message: 'Do you want to cancel your changes?',
+    cancelText: 'Cancel',
+    okText: 'OK'
+  };
+  title: string;
+  message: string;
+  okText: string;
+  cancelText: string;
 
-      console.log('not equal', val);
-      this.messageModel = val;
+  private negativeOnClick;
+  private positiveOnClick;
 
-      if (val) {
-        this.show();
-      }
-    }
-  }
-
-  // @Output()
-  // messageModalChange: EventEmitter<string> = new EventEmitter<string>();
-
-  @Output('msgClick')
-  msgClick: EventEmitter<any> = new EventEmitter();
-
-  constructor() {
+  constructor(confirmService: MessageboxService) {
+    confirmService.activate = this.activate.bind(this);
   }
 
+  activate(message = this._defaults.message, title = this._defaults.title) {
+    this._setLabels(message, title);
 
-  ngOnInit() {
-    this.show();
+    let promise = new Promise<boolean>(resolve => {
+      this._show(resolve);
+    });
+    return promise;
   }
 
-  /**
-   * Shows the modal. There is no method for hiding. This is done using actions of the modal itself.
-   */
-  show() {
-    if (this.messageModel.message) {
-      this.showModal = true;
-    }
+  _setLabels(message = this._defaults.message, title = this._defaults.title) {
+    this.title = title;
+    this.message = message;
+    this.okText = this._defaults.okText;
+    this.cancelText = this._defaults.cancelText;
+  }
+
+
+  private _show(resolve: (boolean) => any) {
+    // document.onkeyup = null;
+
+    this.showModal = true;
+
+    this.negativeOnClick = (e: any) => resolve(false);
+    this.positiveOnClick = (e: any) => resolve(true);
+
+    // if (!this._confirmElement || !this._cancelButton || !this._okButton) { return };
+    // document.onkeyup = (e: any) => {
+    //   if (e.which === KEY_ESC) {
+    //     this._hideDialog();
+    //     return negativeOnClick(null);
+    //   }
+    // };
 
   }
 
-  emitCloseEvent(event: Event, buttonClicked: string) {
+  emitOk(e: Event) {
+    e.preventDefault();
+    if (!this.positiveOnClick(e)) { this._hideDialog(); }
+  }
+  emitCancel(e: Event) {
+    e.preventDefault();
+    if (!this.negativeOnClick(e)) { this._hideDialog(); }
+  }
 
-    event.stopPropagation();
+  private _hideDialog() {
     this.showModal = false;
-    this.msgClick.emit({ 'event': event, 'buttonClicked': buttonClicked, 'messageModel': this.messageModel });
-
   }
+
 
 }

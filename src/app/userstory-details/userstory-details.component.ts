@@ -2,12 +2,12 @@ import { Component, OnInit, OnChanges, Input, SimpleChange, Output, EventEmitter
 import { UserstoryService } from '../userstory-search/userstory.service';
 import { GlobalService } from '../global.service';
 import { Userstory } from '../model/userstory';
-import { MessageModel } from '../messagebox/message-model';
 import * as moment from 'moment/moment';
 import { GlobalConfig } from '../global-config';
 import { Resource } from '../model/resource';
 import { FormGroup } from '@angular/forms';
 import { Schedule } from '../model/schedule';
+import { MessageboxService } from '../messagebox/messagebox.service';
 
 @Component({
   selector: 'app-userstory-details',
@@ -24,7 +24,7 @@ export class UserstoryDetailsComponent implements OnInit {
   invokingFrom = '';
 
   userstoryUpdateInProgress = false;
-  userstoryUpdateErrorMessage: string;
+  errorMessage: string;
 
   userDateFormat = this.globalSvc.getDateFormat();
   htmlDateFormat = this.globalSvc.getHtmlDefaultFormat();
@@ -33,15 +33,13 @@ export class UserstoryDetailsComponent implements OnInit {
 
   selectedUserstory = new Userstory();
   selectedSchedule = new Schedule();
-  messageModel = new MessageModel();
 
   companyAdmin;
   showResource = false;
   validPhases = this.globalSvc.getProjectPhaseArr();
   availPhases = [];
 
-
-  constructor(private globalSvc: GlobalService, private schedSvc: UserstoryService) { }
+  constructor(private globalSvc: GlobalService, private messageService: MessageboxService, private schedSvc: UserstoryService) { }
 
   ngOnInit() {
 
@@ -71,12 +69,13 @@ export class UserstoryDetailsComponent implements OnInit {
       },
       err => {
         console.log('project fetch error', err);
+        this.errorMessage = GlobalConfig.parseException(err);
       }
       );
 
   }
 
-  performSelectUserstory(event: Event, userstory: Userstory, formDirty: boolean) {
+  performSelectUserstory(event: Event, userstory: Userstory, form: FormGroup) {
 
     let attrName: string = event.srcElement.getAttribute('name');
     // console.log('attrName', attrName);
@@ -84,15 +83,20 @@ export class UserstoryDetailsComponent implements OnInit {
       return;
     }
 
-    if (formDirty && userstory.userstoryId !== this.selectedUserstory.userstoryId) {
+    if (form.dirty && userstory.userstoryId !== this.selectedUserstory.userstoryId) {
 
-
+      this.messageService.activate('Unsaved data found, want to proceed?... ')
+        .then(res => {
+          if (res) {
+            this.proceedChangingUserStory(userstory, form);
+          }
+        });
     } else {
-      this.proceedChangingUserStory(userstory);
+      this.proceedChangingUserStory(userstory, form);
     }
 
   }
-  proceedChangingUserStory(userstory: Userstory) {
+  proceedChangingUserStory(userstory: Userstory, form: FormGroup) {
 
     // select the new row
     // console.log('userstory', 'selected userstory', userstory);
@@ -103,6 +107,8 @@ export class UserstoryDetailsComponent implements OnInit {
       this.selectedSchedule = this.selectedUserstory.schedules[0];
     }
     this.changeAvailPhaseDynamically();
+
+    form.markAsPristine(true);
 
     console.log(this.selectedUserstory);
 
@@ -132,9 +138,9 @@ export class UserstoryDetailsComponent implements OnInit {
 
   }
 
-  createUpdateUserstory(formValid: boolean, formDirty: boolean) {
+  createUpdateUserstory(form: FormGroup) {
 
-    if (!formDirty || !formValid) {
+    if (!form.dirty || !form.valid) {
       return;
     }
 
@@ -154,12 +160,14 @@ export class UserstoryDetailsComponent implements OnInit {
           } else {
             this.userstories[index] = userstory;
           }
+          // clearing form dirty
+          form.markAsPristine(true);
 
         },
         err => {
           console.log('Update Exception', err);
           this.userstoryUpdateInProgress = false;
-          this.userstoryUpdateErrorMessage = GlobalConfig.parseException(err);
+          this.errorMessage = GlobalConfig.parseException(err);
         }
         );
 
@@ -173,12 +181,14 @@ export class UserstoryDetailsComponent implements OnInit {
           console.log(userstory);
           this.userstoryUpdateInProgress = false;
           this.userstories.push(userstory);
+          // clearing form dirty
+          form.markAsPristine(true);
 
         },
         err => {
           console.log('Update Exception', err);
           this.userstoryUpdateInProgress = false;
-          this.userstoryUpdateErrorMessage = GlobalConfig.parseException(err);
+          this.errorMessage = GlobalConfig.parseException(err);
         }
         );
 
@@ -186,13 +196,31 @@ export class UserstoryDetailsComponent implements OnInit {
 
   }
 
-  deleteUserstory(selectedUserstory: Userstory) {
+  deleteUserstory(deleteUserStory: Userstory) {
 
-    this.messageModel = new MessageModel();
-    this.messageModel.message = 'are you sure you want to delete the userstory?';
-    this.messageModel.operation = 'removeUserstory';
-    this.messageModel.carryOver = selectedUserstory;
+    this.messageService.activate('Please use search criteria and select user')
+      .then(res => {
+        console.log(`Confirmed: ${res}`);
 
+        if (res) {
+
+          this.schedSvc.deleteUserstory(deleteUserStory.userstoryId)
+            .subscribe(
+            status => {
+              // console.log(users);
+              // set back to screen using user variable
+              this.userstories = this.userstories.filter(filter => filter.userstoryId !== deleteUserStory.userstoryId);
+              // reset selected userstory
+              this.selectedUserstory = new Userstory();
+            },
+            err => {
+              console.log('Userstory deletion Exception', err);
+              this.errorMessage = GlobalConfig.parseException(err);
+            }
+            );
+
+        }
+      });
   }
   calculateDate(from: string) {
 
@@ -241,32 +269,6 @@ export class UserstoryDetailsComponent implements OnInit {
     console.log('return date', moment(retDate).utc().format(this.htmlDateFormat));
 
     return moment(retDate).utc().format(this.htmlDateFormat);
-  }
-
-  doMessageClick(event: any) {
-
-    let whichButton = event.buttonClicked;
-    let messageModel: MessageModel = event.messageModel;
-
-
-    if (messageModel.operation === 'removeUserstory') {
-      if (whichButton === 'Ok') {
-        let userstoryToDelete: Userstory = messageModel.carryOver;
-        this.schedSvc.deleteUserstory(userstoryToDelete.userstoryId)
-          .subscribe(
-          status => {
-            // console.log(users);
-            // set back to screen using user variable
-            this.userstories = this.userstories.filter(filter => filter.userstoryId !== userstoryToDelete.userstoryId);
-            // reset selected userstory
-            this.selectedUserstory = new Userstory();
-          },
-          err => {
-            console.log('Userstory deletion Exception', err);
-          }
-          );
-      }
-    }
   }
 
   assignOwnerOnResourceClick(selectedResource: Resource) {

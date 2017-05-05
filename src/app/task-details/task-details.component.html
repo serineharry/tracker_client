@@ -43,7 +43,7 @@
                                 <div class="form-group col-md-6">
                                     <label> User Story </label>
                                     <div *ngIf="(task.scheduleId); else assignScheduleBlock">
-                                        {{task.userStory }}
+                                        {{ task.projectUid }} {{task.userstory }}
                                         <span name="clearSchedule" class="fa fa-times-circle global-glyph-btn" (click)='clearSchedule()' *ngIf="companyAdmin"></span>
                                     </div>
                                     <ng-template #assignScheduleBlock>
